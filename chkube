@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Directory where the configs are located
+CONFIG_DIR="$HOME/.kube/configs"
+
+# Check if the directory exists
+if [ ! -d "$CONFIG_DIR" ]; then
+  echo "The directory $CONFIG_DIR does not exist."
+  exit 1
+fi
+
+# List the available configuration files
+configs=($(ls -1 "$CONFIG_DIR"))
+
+if [ ${#configs[@]} -eq 0 ]; then
+  echo "No configuration files found in $CONFIG_DIR."
+  exit 1
+fi
+
+echo "Select the configuration file you want to use:"
+
+# Display the options for the user
+select config in "${configs[@]}"; do
+  if [[ -n "$config" ]]; then
+    # Copy the selected file to ~/.kube/config
+    cp "$CONFIG_DIR/$config" "$HOME/.kube/config"
+    echo "Configuration file $config copied to ~/.kube/config."
+    break
+  else
+    echo "Invalid selection. Please try again."
+  fi
+done
